@@ -1,5 +1,7 @@
 # HTTP Flood
 
+Obs: esse repositório foi criado para fins educacionais, qualquer uso das ferramentas aqui disponibilizadas não são de responsabilidade do autor.
+
 ## O que é?
 
 Um ataque de inundação HTTP é um tipo de ataque volumétrico de negação de serviço distribuída (DDoS) desenvolvido para sobrecarregar um servidor visado com solicitações HTTP. Depois que o alvo ficar saturado com solicitações e não conseguir responder ao tráfego normal, ocorrerá a negação de serviço para as solicitações adicionais de usuários verdadeiros.
