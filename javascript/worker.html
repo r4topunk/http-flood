@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <title>HTTP Flood Example</title>
+  </head>
+  <body>
+    <div>Number of requests sent: <span id="qtd_req">0</span></div>
+
+    <script>
+      if (window.Worker) {
+        const qtdRequestsDom = document.getElementById("qtd_req");
+        let requestsSent = 0;
+
+        // Create a new Web Worker
+        const worker = new Worker("worker.js");
+
+        // Receive messages from the worker
+        worker.onmessage = function (event) {
+          requestsSent += event.data;
+          qtdRequestsDom.innerText = requestsSent;
+        };
+
+        // Start the worker
+        worker.postMessage({
+          url: "http://localhost:8080",
+          numberOfRequests: 1000,
+        });
+      } else {
+        console.error("Web Workers are not supported in your browser.");
+      }
+    </script>
+  </body>
+</html>

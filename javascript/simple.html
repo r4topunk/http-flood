@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTTP Flood Test</title>
+  </head>
+  <body
+    style="
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+    "
+  >
+    <h3>
+      Você requisitou
+      <span style="font-weight: bold" id="qtd_req">0</span> vezes
+    </h3>
+    <script>
+      const alvo = "http://localhost:8080";
+      const qtdRequestsDom = document.getElementById("qtd_req");
+
+      for (let i = 0; i <= 1000; i++) {
+        fetch(alvo);
+        qtdRequestsDom.innerText = i;
+      }
+    </script>
+  </body>
+</html>
